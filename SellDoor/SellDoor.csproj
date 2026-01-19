@@ -8,8 +8,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="Krafs.Publicizer" Version="2.3.0">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
 	  <PackageReference Include="Lib.Harmony" Version="2.3.3" />
 	  <PackageReference Include="RestoreMonarchy.RocketRedist" Version="3.24.6" ExcludeAssets="runtime" />
+	  <Publicize Include="Assembly-CSharp:SDG.Unturned.NetIdRegistry.counter"/>
 	</ItemGroup>
 
 	<ItemGroup>

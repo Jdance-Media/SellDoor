@@ -7,8 +7,10 @@ namespace RestoreMonarchy.SellDoor.Helpers
 {
     public class StructureHelper
     {
+        /*
         public static StructureDrop FindStructureDropByPosition(Guid assetGuid, Vector3 point)
         {
+            
             List<RegionCoordinate> regions = new();
             Regions.getRegionsInRadius(point, 0.1f, regions);
 
@@ -17,17 +19,25 @@ namespace RestoreMonarchy.SellDoor.Helpers
 
             foreach (Transform result in results)
             {
-                StructureDrop structureDrop = StructureManager.FindStructureByRootTransform(result);
-                StructureData structureData = structureDrop.GetServersideData();
+                NetId netId = NetIdRegistry.GetTransformNetId(result);
+                if (netId == NetId.INVALID)
+                    return null;
+                netId.id--;
+                StructureDrop drop = NetIdRegistry.Get<StructureDrop>(netId);
+                StructureData structureData = drop.GetServersideData();
 
-                if (structureData.point == point && structureDrop.asset.GUID == assetGuid)
+                if (structureData.point == point && drop.asset.GUID == assetGuid)
                 {
-                    return structureDrop;
+                    return drop;
                 }
             }
+            
+
+            
 
             return null;
         }
+        */
 
         public static StructureDrop ForceDropStructure(ItemStructureAsset asset, Vector3 point, Vector3 angle, ulong owner, ulong group)
         {
@@ -36,7 +46,11 @@ namespace RestoreMonarchy.SellDoor.Helpers
 
             StructureManager.dropReplicatedStructure(structure, point, rotation, owner, group);
 
-            return FindStructureDropByPosition(asset.GUID, point);
+            NetId dropNetId = new NetId(NetIdRegistry.counter - 2);
+
+            StructureDrop drop = NetIdRegistry.Get<StructureDrop>(dropNetId);
+
+            return drop;
         }
     }
 }

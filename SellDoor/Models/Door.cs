@@ -39,7 +39,11 @@ namespace RestoreMonarchy.SellDoor.Models
         {
             steamID = CSteamID.Nil;
             groupID = CSteamID.Nil;
-            BarricadeDrop drop = BarricadeManager.FindBarricadeByRootTransform(Transform);
+            NetId netId = NetIdRegistry.GetTransformNetId(Transform);
+            if (netId == NetId.INVALID)
+                return false;
+            netId.id--;
+            BarricadeDrop drop = NetIdRegistry.Get<BarricadeDrop>(netId);
             if (drop == null)
             {
                 return false;

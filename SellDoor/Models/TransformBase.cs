@@ -25,7 +25,13 @@ namespace RestoreMonarchy.SellDoor.Models
 
                 if (AssetId == null)
                 {
-                    BarricadeDrop drop = BarricadeManager.FindBarricadeByRootTransform(Transform);
+                    BarricadeDrop drop = null;
+                    NetId netId = NetIdRegistry.GetTransformNetId(Transform);
+                    if (netId != NetId.INVALID)
+                    {
+                        netId.id--;
+                        drop = NetIdRegistry.Get<BarricadeDrop>(netId);
+                    }
                     if (drop != null)
                     {
                         AssetId = drop.asset.GUID;
@@ -33,8 +39,14 @@ namespace RestoreMonarchy.SellDoor.Models
                     }
                     else
                     {
-                        StructureDrop structureDrop = StructureManager.FindStructureByRootTransform(Transform);
-                        if (drop != null)
+                        StructureDrop structureDrop = null;
+                        NetId structureNetId = NetIdRegistry.GetTransformNetId(Transform);
+                        if (structureNetId != NetId.INVALID)
+                        {
+                            structureNetId.id--;
+                            structureDrop = NetIdRegistry.Get<StructureDrop>(structureNetId);
+                        }
+                        if (structureDrop != null)
                         {
                             AssetId = structureDrop.asset.GUID;
                             AssetName = structureDrop.asset.itemName;

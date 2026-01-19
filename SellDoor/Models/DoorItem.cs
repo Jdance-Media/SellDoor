@@ -1,5 +1,6 @@
 ﻿using SDG.Unturned;
 using Steamworks;
+using UnityEngine;
 
 namespace RestoreMonarchy.SellDoor.Models
 {
@@ -29,7 +30,11 @@ namespace RestoreMonarchy.SellDoor.Models
                 return;
             }                
 
-            BarricadeDrop drop = BarricadeManager.FindBarricadeByRootTransform(Transform);
+            NetId netId = NetIdRegistry.GetTransformNetId(Transform);
+            if (netId == NetId.INVALID)
+                return;
+            netId.id--;
+            BarricadeDrop drop = NetIdRegistry.Get<BarricadeDrop>(netId);
             if (drop == null)
             {
                 return;

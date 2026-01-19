@@ -1,4 +1,5 @@
 ﻿using SDG.Unturned;
+using Steamworks;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,7 +23,12 @@ namespace RestoreMonarchy.SellDoor.Helpers
                     transform = door.transform;
                 }
 
-                drop = BarricadeManager.FindBarricadeByRootTransform(transform);
+                NetId netId = NetIdRegistry.GetTransformNetId(transform);
+                if (netId == NetId.INVALID)
+                    return null;
+                netId.id--;
+                drop = NetIdRegistry.Get<BarricadeDrop>(netId);
+
                 if (drop != null)
                 {
                     barricadeData = drop.GetServersideData();
@@ -40,7 +46,11 @@ namespace RestoreMonarchy.SellDoor.Helpers
             Ray ray = new Ray(player.look.aim.position, player.look.aim.forward);
             if (Physics.Raycast(ray, out hit, 3, RayMasks.STRUCTURE_INTERACT))
             {
-                StructureDrop drop = StructureManager.FindStructureByRootTransform(hit.transform);
+                NetId netId = NetIdRegistry.GetTransformNetId(hit.transform);
+                if (netId == NetId.INVALID)
+                    return null;
+                netId.id--;
+                StructureDrop drop = NetIdRegistry.Get<StructureDrop>(netId);
                 if (drop != null)
                 {
                     structureData = drop.GetServersideData();
@@ -62,7 +72,13 @@ namespace RestoreMonarchy.SellDoor.Helpers
             {
                 if (transform.position == position)
                 {
-                    return BarricadeManager.FindBarricadeByRootTransform(transform)?.model ?? null;
+
+                    NetId netId = NetIdRegistry.GetTransformNetId(transform);
+                    if (netId == NetId.INVALID)
+                        return null;
+                    netId.id--;
+                    BarricadeDrop drop = NetIdRegistry.Get<BarricadeDrop>(netId);
+                    return drop?.model ?? null;
                 }
             }
             return null;
@@ -79,7 +95,12 @@ namespace RestoreMonarchy.SellDoor.Helpers
             {
                 if (transform.position == position)
                 {
-                    return StructureManager.FindStructureByRootTransform(transform)?.model ?? null;
+                    NetId netId = NetIdRegistry.GetTransformNetId(transform);
+                    if (netId == NetId.INVALID)
+                        return null;
+                    netId.id--;
+                    StructureDrop drop = NetIdRegistry.Get<StructureDrop>(netId);
+                    return drop?.model ?? null;
                 }
             }
 
