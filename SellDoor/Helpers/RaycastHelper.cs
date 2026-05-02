@@ -72,13 +72,13 @@ namespace RestoreMonarchy.SellDoor.Helpers
             {
                 if (transform.position == position)
                 {
-
                     NetId netId = NetIdRegistry.GetTransformNetId(transform);
                     if (netId == NetId.INVALID)
-                        return null;
+                        continue;
                     netId.id--;
                     BarricadeDrop drop = NetIdRegistry.Get<BarricadeDrop>(netId);
-                    return drop?.model ?? null;
+                    if (drop != null)
+                        return drop.model;
                 }
             }
             return null;
@@ -97,10 +97,11 @@ namespace RestoreMonarchy.SellDoor.Helpers
                 {
                     NetId netId = NetIdRegistry.GetTransformNetId(transform);
                     if (netId == NetId.INVALID)
-                        return null;
+                        continue;
                     netId.id--;
                     StructureDrop drop = NetIdRegistry.Get<StructureDrop>(netId);
-                    return drop?.model ?? null;
+                    if (drop != null)
+                        return drop.model;
                 }
             }
 

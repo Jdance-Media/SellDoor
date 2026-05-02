@@ -21,16 +21,15 @@ namespace RestoreMonarchy.SellDoor.Helpers
 
             foreach (Transform result in results)
             {
-
                 NetId netId = NetIdRegistry.GetTransformNetId(result);
                 if (netId == NetId.INVALID)
-                    return null;
+                    continue;
                 netId.id--;
                 BarricadeDrop drop = NetIdRegistry.Get<BarricadeDrop>(netId);
-
+                if (drop == null)
+                    continue;
 
                 BarricadeData barricadeData = drop.GetServersideData();
-
                 if (barricadeData.point == point && drop.asset.GUID == assetGuid)
                 {
                     return drop;
@@ -49,14 +48,11 @@ namespace RestoreMonarchy.SellDoor.Helpers
 
             Transform transform = BarricadeManager.dropNonPlantedBarricade(barricade, point, rotation, owner, group);
 
-
             NetId netId = NetIdRegistry.GetTransformNetId(transform);
             if (netId == NetId.INVALID)
                 return null;
             netId.id--;
-            BarricadeDrop drop = NetIdRegistry.Get<BarricadeDrop>(netId);
-
-            return drop;
+            return NetIdRegistry.Get<BarricadeDrop>(netId);
         }  
     }
 }
